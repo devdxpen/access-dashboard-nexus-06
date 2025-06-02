@@ -20,7 +20,7 @@ import TechnicianJobDetails from "./pages/technician/TechnicianJobDetails";
 import TechnicianProfile from "./pages/technician/TechnicianProfile";
 import SuperAdminDashboard from "./pages/SuperAdminDashboard";
 import AdminDashboardEnhanced from "./pages/AdminDashboardEnhanced";
-import TechnicianJobManager from "./pages/technician/TechnicianJobManager";
+import TechnicianJobManager from "./pages/TechnicianJobManager";
 import SuperAdminLogin from "./pages/SuperAdminLogin";
 
 const queryClient = new QueryClient();
