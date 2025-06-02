@@ -1,4 +1,3 @@
-
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -19,6 +18,10 @@ import TechnicianLogin from "./pages/technician/TechnicianLogin";
 import TechnicianJobs from "./pages/technician/TechnicianJobs";
 import TechnicianJobDetails from "./pages/technician/TechnicianJobDetails";
 import TechnicianProfile from "./pages/technician/TechnicianProfile";
+import SuperAdminDashboard from "./pages/SuperAdminDashboard";
+import AdminDashboardEnhanced from "./pages/AdminDashboardEnhanced";
+import TechnicianJobManager from "./pages/technician/TechnicianJobManager";
+import SuperAdminLogin from "./pages/SuperAdminLogin";
 
 const queryClient = new QueryClient();
 
@@ -32,6 +35,13 @@ const App = () => (
           <Route path="/" element={<Login />} />
           <Route path="/login" element={<Login />} />
           <Route path="/dashboard" element={<Dashboard />} />
+          
+          {/* Super Admin Routes */}
+          <Route path="/super-admin/login" element={<SuperAdminLogin />} />
+          <Route path="/super-admin" element={<SuperAdminDashboard />} />
+          
+          {/* Enhanced Admin Routes */}
+          <Route path="/admin/dashboard" element={<AdminDashboardEnhanced />} />
           <Route path="/jobs" element={<JobManagement />} />
           <Route path="/job/:id" element={<JobDetails />} />
           <Route path="/team" element={<TeamManagement />} />
@@ -47,6 +57,7 @@ const App = () => (
           <Route path="/technician/jobs" element={<TechnicianJobs />} />
           <Route path="/technician/job/:id" element={<TechnicianJobDetails />} />
           <Route path="/technician/profile" element={<TechnicianProfile />} />
+          <Route path="/technician/manager" element={<TechnicianJobManager />} />
           
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
