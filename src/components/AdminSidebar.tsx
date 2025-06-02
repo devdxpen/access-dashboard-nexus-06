@@ -1,5 +1,6 @@
 
 import React from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { 
   LayoutDashboard, 
   Briefcase, 
@@ -17,51 +18,50 @@ import { useState } from 'react';
 
 const AdminSidebar = () => {
   const [isCollapsed, setIsCollapsed] = useState(false);
+  const navigate = useNavigate();
+  const location = useLocation();
 
   const menuItems = [
     {
       title: "Dashboard",
       icon: LayoutDashboard,
-      href: "/dashboard",
-      active: true
+      href: "/dashboard"
     },
     {
       title: "Job Management",
       icon: Briefcase,
-      href: "/jobs",
-      active: false
+      href: "/jobs"
     },
     {
       title: "Team Management",
       icon: Users,
-      href: "/team",
-      active: false
+      href: "/team"
     },
     {
       title: "Client Management",
       icon: Building2,
-      href: "/clients",
-      active: false
+      href: "/clients"
     },
     {
       title: "Reports",
       icon: BarChart3,
-      href: "/reports",
-      active: false
+      href: "/reports"
     },
     {
       title: "Notifications",
       icon: Bell,
-      href: "/notifications",
-      active: false
+      href: "/notifications"
     },
     {
       title: "Settings",
       icon: Settings,
-      href: "/settings",
-      active: false
+      href: "/settings"
     }
   ];
+
+  const handleNavigation = (href: string) => {
+    navigate(href);
+  };
 
   return (
     <>
@@ -105,16 +105,17 @@ const AdminSidebar = () => {
           {menuItems.map((item, index) => (
             <button
               key={index}
+              onClick={() => handleNavigation(item.href)}
               className={cn(
                 "w-full flex items-center space-x-3 px-3 py-2.5 rounded-lg text-left transition-all duration-200",
-                item.active 
+                location.pathname === item.href
                   ? "bg-primary text-white shadow-sm" 
                   : "text-gray-600 hover:bg-gray-50 hover:text-gray-900"
               )}
             >
               <item.icon className={cn(
                 "h-5 w-5 flex-shrink-0",
-                item.active ? "text-white" : "text-gray-400"
+                location.pathname === item.href ? "text-white" : "text-gray-400"
               )} />
               {!isCollapsed && (
                 <span className="font-medium text-sm">{item.title}</span>
