@@ -8,8 +8,12 @@ import Index from "./pages/Index";
 import Login from "./pages/Login";
 import Dashboard from "./pages/Dashboard";
 import JobManagement from "./pages/JobManagement";
+import JobDetails from "./pages/JobDetails";
 import TeamManagement from "./pages/TeamManagement";
 import ClientManagement from "./pages/ClientManagement";
+import Reports from "./pages/Reports";
+import Notifications from "./pages/Notifications";
+import Settings from "./pages/Settings";
 import NotFound from "./pages/NotFound";
 import TechnicianLogin from "./pages/technician/TechnicianLogin";
 import TechnicianJobs from "./pages/technician/TechnicianJobs";
@@ -29,8 +33,12 @@ const App = () => (
           <Route path="/login" element={<Login />} />
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/jobs" element={<JobManagement />} />
+          <Route path="/job/:id" element={<JobDetails />} />
           <Route path="/team" element={<TeamManagement />} />
           <Route path="/clients" element={<ClientManagement />} />
+          <Route path="/reports" element={<Reports />} />
+          <Route path="/notifications" element={<Notifications />} />
+          <Route path="/settings" element={<Settings />} />
           <Route path="/index" element={<Index />} />
           
           {/* Technician Routes */}
