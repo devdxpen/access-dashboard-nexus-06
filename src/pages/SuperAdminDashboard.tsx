@@ -2,342 +2,208 @@
 import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
-import { Label } from '@/components/ui/label';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Badge } from '@/components/ui/badge';
-import { Switch } from '@/components/ui/switch';
-import { Users, Building2, CreditCard, Settings, Plus, Edit, Eye, Power } from 'lucide-react';
+import { Users, Building2, CreditCard, TrendingUp, Activity, Target, DollarSign, Calendar } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 
 const SuperAdminDashboard = () => {
-  const [isCreateAdminOpen, setIsCreateAdminOpen] = useState(false);
-  const [isCreatePlanOpen, setIsCreatePlanOpen] = useState(false);
+  const navigate = useNavigate();
 
-  // Mock data for admins
-  const admins = [
+  // Mock data for overview
+  const overviewStats = [
     {
-      id: '1',
-      companyName: 'TechCorp Solutions',
-      adminName: 'John Smith',
-      email: 'john@techcorp.com',
-      plan: 'Professional',
-      technicians: '5/10',
-      status: 'active',
-      lastLogin: '2024-01-15'
+      title: "Total Companies",
+      value: "47",
+      change: "+12%",
+      icon: Building2,
+      color: "text-blue-600",
+      bgColor: "bg-blue-50",
+      description: "Active registered companies"
     },
     {
-      id: '2',
-      companyName: 'ServicePro Ltd',
-      adminName: 'Sarah Johnson',
-      email: 'sarah@servicepro.com',
-      plan: 'Enterprise',
-      technicians: '15/25',
-      status: 'active',
-      lastLogin: '2024-01-14'
+      title: "Active Subscriptions",
+      value: "41",
+      change: "+8%", 
+      icon: CreditCard,
+      color: "text-green-600",
+      bgColor: "bg-green-50",
+      description: "Currently paying subscriptions"
     },
     {
-      id: '3',
-      companyName: 'FixIt Now',
-      adminName: 'Mike Wilson',
-      email: 'mike@fixitnow.com',
-      plan: 'Basic',
-      technicians: '2/5',
-      status: 'inactive',
-      lastLogin: '2024-01-10'
+      title: "Total Technicians",
+      value: "312",
+      change: "+15%",
+      icon: Users,
+      color: "text-purple-600",
+      bgColor: "bg-purple-50",
+      description: "Across all companies"
+    },
+    {
+      title: "Monthly Revenue",
+      value: "$24,890",
+      change: "+23%",
+      icon: DollarSign,
+      color: "text-orange-600",
+      bgColor: "bg-orange-50",
+      description: "Recurring monthly revenue"
     }
   ];
 
-  // Mock data for subscription plans
-  const subscriptionPlans = [
+  const recentActivities = [
     {
-      id: '1',
-      name: 'Basic',
-      maxTechnicians: 5,
-      features: ['Job Management', 'Basic Reporting'],
-      price: '$29/month',
-      status: 'active'
+      id: 1,
+      type: 'company_registered',
+      message: 'New company "ServiceTech Pro" registered with Professional plan',
+      time: '2 hours ago',
+      status: 'success'
     },
     {
-      id: '2',
-      name: 'Professional',
-      maxTechnicians: 10,
-      features: ['Job Management', 'Advanced Reporting', 'GPS Tracking'],
-      price: '$59/month',
-      status: 'active'
+      id: 2,
+      type: 'subscription_upgraded',
+      message: 'TechCorp Solutions upgraded from Basic to Enterprise plan',
+      time: '5 hours ago',
+      status: 'info'
     },
     {
-      id: '3',
-      name: 'Enterprise',
-      maxTechnicians: 25,
-      features: ['All Features', 'API Access', 'Priority Support'],
-      price: '$99/month',
-      status: 'active'
+      id: 3,
+      type: 'payment_received',
+      message: 'Payment received from ServicePro Ltd - $99.00',
+      time: '1 day ago',
+      status: 'success'
+    },
+    {
+      id: 4,
+      type: 'subscription_expired',
+      message: 'Subscription expired for FixIt Now - requires renewal',
+      time: '2 days ago',
+      status: 'warning'
     }
   ];
 
-  const getStatusBadge = (status: string) => {
-    return status === 'active' ? 
-      <Badge className="bg-green-100 text-green-800">Active</Badge> : 
-      <Badge className="bg-red-100 text-red-800">Inactive</Badge>;
-  };
+  const planDistribution = [
+    { name: 'Basic', count: 15, percentage: 32, color: 'bg-blue-500' },
+    { name: 'Professional', count: 18, percentage: 39, color: 'bg-green-500' },
+    { name: 'Enterprise', count: 8, percentage: 17, color: 'bg-purple-500' },
+    { name: 'Expired/Inactive', count: 6, percentage: 12, color: 'bg-gray-400' }
+  ];
 
   return (
     <div className="min-h-screen bg-gray-50 p-6">
       {/* Header */}
       <div className="mb-8">
         <h1 className="text-3xl font-bold text-gray-900 mb-2">Super Admin Dashboard</h1>
-        <p className="text-gray-600">Manage admin accounts and subscription plans</p>
+        <p className="text-gray-600">Overview of companies, subscriptions, and system performance</p>
       </div>
 
       {/* Overview Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
-        <Card>
-          <CardContent className="p-6">
-            <div className="flex items-center">
-              <Building2 className="h-8 w-8 text-blue-500" />
-              <div className="ml-4">
-                <p className="text-sm font-medium text-gray-600">Total Admins</p>
-                <p className="text-2xl font-bold text-gray-900">{admins.length}</p>
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+        {overviewStats.map((stat, index) => (
+          <Card key={index} className="hover:shadow-md transition-shadow">
+            <CardContent className="p-6">
+              <div className="flex items-center justify-between">
+                <div className="flex-1">
+                  <p className="text-sm font-medium text-gray-600 mb-1">{stat.title}</p>
+                  <p className="text-3xl font-bold text-gray-900 mb-1">{stat.value}</p>
+                  <div className="flex items-center space-x-2">
+                    <span className="text-sm font-medium text-green-600">{stat.change}</span>
+                    <span className="text-xs text-gray-500">{stat.description}</span>
+                  </div>
+                </div>
+                <div className={`${stat.bgColor} p-3 rounded-2xl`}>
+                  <stat.icon className={`h-6 w-6 ${stat.color}`} />
+                </div>
               </div>
+            </CardContent>
+          </Card>
+        ))}
+      </div>
+
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
+        {/* Plan Distribution */}
+        <Card className="lg:col-span-1">
+          <CardHeader>
+            <CardTitle className="flex items-center">
+              <Target className="h-5 w-5 mr-2 text-primary" />
+              Plan Distribution
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-4">
+              {planDistribution.map((plan, index) => (
+                <div key={index} className="flex items-center justify-between">
+                  <div className="flex items-center space-x-3">
+                    <div className={`w-3 h-3 rounded-full ${plan.color}`}></div>
+                    <span className="text-sm font-medium">{plan.name}</span>
+                  </div>
+                  <div className="text-right">
+                    <span className="text-sm font-bold">{plan.count}</span>
+                    <span className="text-xs text-gray-500 ml-1">({plan.percentage}%)</span>
+                  </div>
+                </div>
+              ))}
             </div>
           </CardContent>
         </Card>
-        
-        <Card>
-          <CardContent className="p-6">
-            <div className="flex items-center">
-              <Users className="h-8 w-8 text-green-500" />
-              <div className="ml-4">
-                <p className="text-sm font-medium text-gray-600">Active Admins</p>
-                <p className="text-2xl font-bold text-gray-900">
-                  {admins.filter(a => a.status === 'active').length}
-                </p>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-        
-        <Card>
-          <CardContent className="p-6">
-            <div className="flex items-center">
-              <CreditCard className="h-8 w-8 text-purple-500" />
-              <div className="ml-4">
-                <p className="text-sm font-medium text-gray-600">Subscription Plans</p>
-                <p className="text-2xl font-bold text-gray-900">{subscriptionPlans.length}</p>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-        
-        <Card>
-          <CardContent className="p-6">
-            <div className="flex items-center">
-              <Settings className="h-8 w-8 text-orange-500" />
-              <div className="ml-4">
-                <p className="text-sm font-medium text-gray-600">Total Revenue</p>
-                <p className="text-2xl font-bold text-gray-900">$2,340</p>
-              </div>
+
+        {/* Recent Activities */}
+        <Card className="lg:col-span-2">
+          <CardHeader>
+            <CardTitle className="flex items-center">
+              <Activity className="h-5 w-5 mr-2 text-primary" />
+              Recent Activities
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-4">
+              {recentActivities.map((activity) => (
+                <div key={activity.id} className="flex items-start space-x-3 p-3 bg-gray-50 rounded-lg">
+                  <div className={`w-2 h-2 rounded-full mt-2 ${
+                    activity.status === 'success' ? 'bg-green-500' : 
+                    activity.status === 'warning' ? 'bg-yellow-500' : 'bg-blue-500'
+                  }`}></div>
+                  <div className="flex-1">
+                    <p className="text-sm text-gray-900">{activity.message}</p>
+                    <p className="text-xs text-gray-500 mt-1">{activity.time}</p>
+                  </div>
+                </div>
+              ))}
             </div>
           </CardContent>
         </Card>
       </div>
 
-      {/* Admin Management */}
-      <Card className="mb-8">
-        <CardHeader>
-          <div className="flex justify-between items-center">
-            <CardTitle>Admin Accounts</CardTitle>
-            <Button onClick={() => setIsCreateAdminOpen(true)}>
-              <Plus className="h-4 w-4 mr-2" />
-              Create Admin
-            </Button>
-          </div>
-        </CardHeader>
-        <CardContent>
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>Company</TableHead>
-                <TableHead>Admin Name</TableHead>
-                <TableHead>Email</TableHead>
-                <TableHead>Plan</TableHead>
-                <TableHead>Technicians</TableHead>
-                <TableHead>Status</TableHead>
-                <TableHead>Last Login</TableHead>
-                <TableHead>Actions</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {admins.map((admin) => (
-                <TableRow key={admin.id}>
-                  <TableCell className="font-medium">{admin.companyName}</TableCell>
-                  <TableCell>{admin.adminName}</TableCell>
-                  <TableCell>{admin.email}</TableCell>
-                  <TableCell>{admin.plan}</TableCell>
-                  <TableCell>{admin.technicians}</TableCell>
-                  <TableCell>{getStatusBadge(admin.status)}</TableCell>
-                  <TableCell>{admin.lastLogin}</TableCell>
-                  <TableCell>
-                    <div className="flex items-center gap-2">
-                      <Button variant="ghost" size="sm">
-                        <Eye className="h-4 w-4" />
-                      </Button>
-                      <Button variant="ghost" size="sm">
-                        <Edit className="h-4 w-4" />
-                      </Button>
-                      <Button variant="ghost" size="sm">
-                        <Power className="h-4 w-4" />
-                      </Button>
-                    </div>
-                  </TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </CardContent>
-      </Card>
-
-      {/* Subscription Plans */}
+      {/* Quick Actions */}
       <Card>
         <CardHeader>
-          <div className="flex justify-between items-center">
-            <CardTitle>Subscription Plans</CardTitle>
-            <Button onClick={() => setIsCreatePlanOpen(true)}>
-              <Plus className="h-4 w-4 mr-2" />
-              Create Plan
-            </Button>
-          </div>
+          <CardTitle>Quick Actions</CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {subscriptionPlans.map((plan) => (
-              <Card key={plan.id} className="border-2">
-                <CardHeader>
-                  <CardTitle className="flex justify-between items-center">
-                    {plan.name}
-                    {getStatusBadge(plan.status)}
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="space-y-4">
-                    <div>
-                      <p className="text-2xl font-bold text-primary">{plan.price}</p>
-                      <p className="text-sm text-gray-600">Max {plan.maxTechnicians} technicians</p>
-                    </div>
-                    <div>
-                      <p className="font-medium mb-2">Features:</p>
-                      <ul className="space-y-1">
-                        {plan.features.map((feature, index) => (
-                          <li key={index} className="text-sm text-gray-600">• {feature}</li>
-                        ))}
-                      </ul>
-                    </div>
-                    <div className="flex gap-2">
-                      <Button variant="outline" size="sm">
-                        <Edit className="h-4 w-4 mr-1" />
-                        Edit
-                      </Button>
-                      <Button variant="outline" size="sm">
-                        <Power className="h-4 w-4 mr-1" />
-                        Toggle
-                      </Button>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-            ))}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <Button 
+              className="flex flex-col items-center space-y-2 h-20"
+              onClick={() => navigate('/super-admin/companies')}
+            >
+              <Building2 className="h-6 w-6" />
+              <span>Manage Companies</span>
+            </Button>
+            <Button 
+              variant="outline" 
+              className="flex flex-col items-center space-y-2 h-20"
+              onClick={() => navigate('/super-admin/subscriptions')}
+            >
+              <CreditCard className="h-6 w-6" />
+              <span>Subscription Plans</span>
+            </Button>
+            <Button 
+              variant="outline" 
+              className="flex flex-col items-center space-y-2 h-20"
+            >
+              <TrendingUp className="h-6 w-6" />
+              <span>View Reports</span>
+            </Button>
           </div>
         </CardContent>
       </Card>
-
-      {/* Create Admin Modal */}
-      <Dialog open={isCreateAdminOpen} onOpenChange={setIsCreateAdminOpen}>
-        <DialogContent className="sm:max-w-[500px]">
-          <DialogHeader>
-            <DialogTitle>Create New Admin Account</DialogTitle>
-          </DialogHeader>
-          <div className="grid gap-4 py-4">
-            <div className="grid gap-2">
-              <Label htmlFor="companyName">Company Name</Label>
-              <Input id="companyName" placeholder="Enter company name" />
-            </div>
-            <div className="grid gap-2">
-              <Label htmlFor="adminName">Admin Name</Label>
-              <Input id="adminName" placeholder="Enter admin name" />
-            </div>
-            <div className="grid gap-2">
-              <Label htmlFor="email">Email</Label>
-              <Input id="email" type="email" placeholder="Enter email address" />
-            </div>
-            <div className="grid gap-2">
-              <Label htmlFor="plan">Subscription Plan</Label>
-              <Select>
-                <SelectTrigger>
-                  <SelectValue placeholder="Select plan" />
-                </SelectTrigger>
-                <SelectContent>
-                  {subscriptionPlans.map((plan) => (
-                    <SelectItem key={plan.id} value={plan.name}>{plan.name}</SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
-            <div className="flex items-center space-x-2">
-              <Switch id="active" defaultChecked />
-              <Label htmlFor="active">Active Account</Label>
-            </div>
-          </div>
-          <div className="flex justify-end space-x-2">
-            <Button variant="outline" onClick={() => setIsCreateAdminOpen(false)}>
-              Cancel
-            </Button>
-            <Button onClick={() => setIsCreateAdminOpen(false)}>
-              Create Admin
-            </Button>
-          </div>
-        </DialogContent>
-      </Dialog>
-
-      {/* Create Plan Modal */}
-      <Dialog open={isCreatePlanOpen} onOpenChange={setIsCreatePlanOpen}>
-        <DialogContent className="sm:max-w-[500px]">
-          <DialogHeader>
-            <DialogTitle>Create Subscription Plan</DialogTitle>
-          </DialogHeader>
-          <div className="grid gap-4 py-4">
-            <div className="grid gap-2">
-              <Label htmlFor="planName">Plan Name</Label>
-              <Input id="planName" placeholder="Enter plan name" />
-            </div>
-            <div className="grid gap-2">
-              <Label htmlFor="price">Monthly Price</Label>
-              <Input id="price" placeholder="$29" />
-            </div>
-            <div className="grid gap-2">
-              <Label htmlFor="maxTech">Max Technicians</Label>
-              <Input id="maxTech" type="number" placeholder="5" />
-            </div>
-            <div className="grid gap-2">
-              <Label htmlFor="features">Features (comma separated)</Label>
-              <Input id="features" placeholder="Job Management, Reporting" />
-            </div>
-            <div className="flex items-center space-x-2">
-              <Switch id="planActive" defaultChecked />
-              <Label htmlFor="planActive">Active Plan</Label>
-            </div>
-          </div>
-          <div className="flex justify-end space-x-2">
-            <Button variant="outline" onClick={() => setIsCreatePlanOpen(false)}>
-              Cancel
-            </Button>
-            <Button onClick={() => setIsCreatePlanOpen(false)}>
-              Create Plan
-            </Button>
-          </div>
-        </DialogContent>
-      </Dialog>
     </div>
   );
 };

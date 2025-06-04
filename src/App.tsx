@@ -23,6 +23,8 @@ import SuperAdminDashboard from "./pages/SuperAdminDashboard";
 import AdminDashboardEnhanced from "./pages/AdminDashboardEnhanced";
 import TechnicianJobManager from "./pages/TechnicianJobManager";
 import SuperAdminLogin from "./pages/SuperAdminLogin";
+import CompanyManagement from "./pages/CompanyManagement";
+import SubscriptionPlans from "./pages/SubscriptionPlans";
 
 const queryClient = new QueryClient();
 
@@ -40,6 +42,8 @@ const App = () => (
           {/* Super Admin Routes */}
           <Route path="/super-admin/login" element={<SuperAdminLogin />} />
           <Route path="/super-admin" element={<SuperAdminDashboard />} />
+          <Route path="/super-admin/companies" element={<CompanyManagement />} />
+          <Route path="/super-admin/subscriptions" element={<SubscriptionPlans />} />
           
           {/* Enhanced Admin Routes */}
           <Route path="/admin/dashboard" element={<AdminDashboardEnhanced />} />
