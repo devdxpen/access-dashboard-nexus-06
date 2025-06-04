@@ -1,5 +1,4 @@
-
-import React from 'react';
+import React, { useState } from 'react';
 import { 
   Building2, 
   Users, 
@@ -16,7 +15,9 @@ import {
   ArrowUp,
   ArrowDown,
   Activity,
-  Target
+  Target,
+  Bell,
+  X
 } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -28,6 +29,7 @@ import AdminSidebar from '@/components/AdminSidebar';
 
 const Dashboard = () => {
   const navigate = useNavigate();
+  const [isNotificationOpen, setIsNotificationOpen] = useState(false);
 
   const handleLogout = () => {
     toast({
@@ -35,6 +37,85 @@ const Dashboard = () => {
       description: "See you next time!",
     });
     navigate('/');
+  };
+
+  // Sample notifications data
+  const notifications = [
+    {
+      id: 1,
+      type: 'job_created',
+      title: 'New Job Created',
+      message: 'Technician John Smith created a new HVAC Installation job for Acme Corp',
+      time: '2 minutes ago',
+      read: false,
+      priority: 'medium'
+    },
+    {
+      id: 2,
+      type: 'job_completed',
+      title: 'Job Completed',
+      message: 'Sarah Johnson completed Plumbing Services at Tech Solutions and submitted for approval',
+      time: '15 minutes ago',
+      read: false,
+      priority: 'high'
+    },
+    {
+      id: 3,
+      type: 'task_moved',
+      title: 'Task Status Updated',
+      message: 'Electrical Repair job moved to "In Progress" by Mike Wilson',
+      time: '1 hour ago',
+      read: true,
+      priority: 'low'
+    },
+    {
+      id: 4,
+      type: 'approval_needed',
+      title: 'Approval Required',
+      message: 'Network Setup job at Startup Inc requires your approval with uploaded completion photos',
+      time: '2 hours ago',
+      read: false,
+      priority: 'high'
+    },
+    {
+      id: 5,
+      type: 'technician_assigned',
+      title: 'Technician Assigned',
+      message: 'Alex Brown has been assigned to Security System installation at Metro Bank',
+      time: '3 hours ago',
+      read: true,
+      priority: 'medium'
+    }
+  ];
+
+  const unreadCount = notifications.filter(n => !n.read).length;
+
+  const getNotificationIcon = (type: string) => {
+    switch (type) {
+      case 'job_created':
+        return <Plus className="h-4 w-4 text-blue-500" />;
+      case 'job_completed':
+        return <CheckCircle2 className="h-4 w-4 text-green-500" />;
+      case 'task_moved':
+        return <Activity className="h-4 w-4 text-purple-500" />;
+      case 'approval_needed':
+        return <AlertCircle className="h-4 w-4 text-red-500" />;
+      case 'technician_assigned':
+        return <Users className="h-4 w-4 text-orange-500" />;
+      default:
+        return <Bell className="h-4 w-4 text-gray-500" />;
+    }
+  };
+
+  const getPriorityBadge = (priority: string) => {
+    const priorityConfig = {
+      'high': { className: 'bg-red-100 text-red-800 border-red-200' },
+      'medium': { className: 'bg-yellow-100 text-yellow-800 border-yellow-200' },
+      'low': { className: 'bg-green-100 text-green-800 border-green-200' }
+    };
+    
+    const config = priorityConfig[priority] || { className: 'bg-gray-100 text-gray-800 border-gray-200' };
+    return <Badge variant="outline" className={config.className}>{priority}</Badge>;
   };
 
   const overviewData = [
@@ -147,17 +228,6 @@ const Dashboard = () => {
     return <Badge className={config.className}>{config.label}</Badge>;
   };
 
-  const getPriorityBadge = (priority: string) => {
-    const priorityConfig = {
-      'high': { className: 'bg-red-100 text-red-800' },
-      'medium': { className: 'bg-yellow-100 text-yellow-800' },
-      'low': { className: 'bg-green-100 text-green-800' }
-    };
-    
-    const config = priorityConfig[priority] || { className: 'bg-gray-100 text-gray-800' };
-    return <Badge variant="outline" className={config.className}>{priority}</Badge>;
-  };
-
   return (
     <div className="min-h-screen bg-gray-50">
       <AdminSidebar />
@@ -183,6 +253,22 @@ const Dashboard = () => {
                 <Filter className="h-4 w-4 mr-2" />
                 Filter
               </Button>
+              
+              {/* Notification Button */}
+              <Button 
+                variant="outline" 
+                size="sm"
+                className="relative"
+                onClick={() => setIsNotificationOpen(true)}
+              >
+                <Bell className="h-4 w-4" />
+                {unreadCount > 0 && (
+                  <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
+                    {unreadCount}
+                  </span>
+                )}
+              </Button>
+              
               <div className="flex items-center space-x-2">
                 <Avatar className="h-8 w-8">
                   <AvatarImage src="/placeholder.svg" />
@@ -201,6 +287,75 @@ const Dashboard = () => {
             </div>
           </div>
         </header>
+
+        {/* Notification Off-canvas */}
+        {isNotificationOpen && (
+          <div className="fixed inset-0 z-50 flex">
+            {/* Backdrop */}
+            <div 
+              className="fixed inset-0 bg-black bg-opacity-50 transition-opacity"
+              onClick={() => setIsNotificationOpen(false)}
+            />
+            
+            {/* Off-canvas panel */}
+            <div className="ml-auto relative flex w-full max-w-md flex-col bg-white shadow-xl">
+              <div className="flex items-center justify-between px-4 py-6 border-b">
+                <h2 className="text-lg font-semibold text-gray-900">Notifications</h2>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => setIsNotificationOpen(false)}
+                >
+                  <X className="h-4 w-4" />
+                </Button>
+              </div>
+              
+              <div className="flex-1 overflow-y-auto">
+                <div className="space-y-1">
+                  {notifications.map((notification) => (
+                    <div
+                      key={notification.id}
+                      className={`p-4 border-b border-gray-100 hover:bg-gray-50 transition-colors ${
+                        !notification.read ? 'bg-blue-50 border-l-4 border-l-blue-500' : ''
+                      }`}
+                    >
+                      <div className="flex items-start space-x-3">
+                        <div className="flex-shrink-0 mt-1">
+                          {getNotificationIcon(notification.type)}
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <div className="flex items-center justify-between mb-1">
+                            <p className="text-sm font-medium text-gray-900 truncate">
+                              {notification.title}
+                            </p>
+                            {getPriorityBadge(notification.priority)}
+                          </div>
+                          <p className="text-sm text-gray-600 mb-2">
+                            {notification.message}
+                          </p>
+                          <div className="flex items-center justify-between">
+                            <span className="text-xs text-gray-500">
+                              {notification.time}
+                            </span>
+                            {!notification.read && (
+                              <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
+                            )}
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+              
+              <div className="border-t p-4">
+                <Button className="w-full" variant="outline">
+                  View All Notifications
+                </Button>
+              </div>
+            </div>
+          </div>
+        )}
 
         {/* Main Content */}
         <main className="p-6">
