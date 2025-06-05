@@ -1,9 +1,8 @@
-
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Index from "./pages/Index";
 import Login from "./pages/Login";
 import Dashboard from "./pages/Dashboard";
@@ -25,51 +24,55 @@ import TechnicianJobManager from "./pages/TechnicianJobManager";
 import SuperAdminLogin from "./pages/SuperAdminLogin";
 import CompanyManagement from "./pages/CompanyManagement";
 import SubscriptionPlans from "./pages/SubscriptionPlans";
+import TechnicianHistory from './pages/technician/TechnicianHistory';
 
 const queryClient = new QueryClient();
 
-const App = () => (
-  <QueryClientProvider client={queryClient}>
-    <TooltipProvider>
-      <Toaster />
-      <Sonner />
-      <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<Login />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/dashboard" element={<Dashboard />} />
-          
-          {/* Super Admin Routes */}
-          <Route path="/super-admin/login" element={<SuperAdminLogin />} />
-          <Route path="/super-admin" element={<SuperAdminDashboard />} />
-          <Route path="/super-admin/companies" element={<CompanyManagement />} />
-          <Route path="/super-admin/subscriptions" element={<SubscriptionPlans />} />
-          
-          {/* Enhanced Admin Routes */}
-          <Route path="/admin/dashboard" element={<AdminDashboardEnhanced />} />
-          <Route path="/jobs" element={<JobManagement />} />
-          <Route path="/job/:id" element={<JobDetails />} />
-          <Route path="/team" element={<TeamManagement />} />
-          <Route path="/clients" element={<ClientManagement />} />
-          <Route path="/reports" element={<Reports />} />
-          <Route path="/notifications" element={<Notifications />} />
-          <Route path="/settings" element={<Settings />} />
-          <Route path="/index" element={<Index />} />
-          
-          {/* Technician Routes */}
-          <Route path="/technician" element={<TechnicianLogin />} />
-          <Route path="/technician/login" element={<TechnicianLogin />} />
-          <Route path="/technician/jobs" element={<TechnicianJobs />} />
-          <Route path="/technician/job/:id" element={<TechnicianJobDetails />} />
-          <Route path="/technician/profile" element={<TechnicianProfile />} />
-          <Route path="/technician/manager" element={<TechnicianJobManager />} />
-          
-          {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-          <Route path="*" element={<NotFound />} />
-        </Routes>
-      </BrowserRouter>
-    </TooltipProvider>
-  </QueryClientProvider>
-);
+function App() {
+  return (
+    <QueryClientProvider client={queryClient}>
+      <TooltipProvider>
+        <Toaster />
+        <Sonner />
+        <Router>
+          <Routes>
+            <Route path="/" element={<Login />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/dashboard" element={<Dashboard />} />
+            
+            {/* Super Admin Routes */}
+            <Route path="/super-admin/login" element={<SuperAdminLogin />} />
+            <Route path="/super-admin" element={<SuperAdminDashboard />} />
+            <Route path="/super-admin/companies" element={<CompanyManagement />} />
+            <Route path="/super-admin/subscriptions" element={<SubscriptionPlans />} />
+            
+            {/* Enhanced Admin Routes */}
+            <Route path="/admin/dashboard" element={<AdminDashboardEnhanced />} />
+            <Route path="/jobs" element={<JobManagement />} />
+            <Route path="/job/:id" element={<JobDetails />} />
+            <Route path="/team" element={<TeamManagement />} />
+            <Route path="/clients" element={<ClientManagement />} />
+            <Route path="/reports" element={<Reports />} />
+            <Route path="/notifications" element={<Notifications />} />
+            <Route path="/settings" element={<Settings />} />
+            <Route path="/index" element={<Index />} />
+            
+            {/* Technician Routes */}
+            <Route path="/technician" element={<TechnicianLogin />} />
+            <Route path="/technician/login" element={<TechnicianLogin />} />
+            <Route path="/technician/jobs" element={<TechnicianJobs />} />
+            <Route path="/technician/job/:id" element={<TechnicianJobDetails />} />
+            <Route path="/technician/profile" element={<TechnicianProfile />} />
+            <Route path="/technician/manager" element={<TechnicianJobManager />} />
+            <Route path="/technician/history" element={<TechnicianHistory />} />
+            
+            {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+            <Route path="*" element={<NotFound />} />
+          </Routes>
+        </Router>
+      </TooltipProvider>
+    </QueryClientProvider>
+  );
+}
 
 export default App;
