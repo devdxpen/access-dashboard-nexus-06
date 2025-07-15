@@ -10,7 +10,8 @@ import {
   Bell, 
   Settings,
   ChevronLeft,
-  ChevronRight
+  ChevronRight,
+  Package
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
@@ -41,6 +42,11 @@ const AdminSidebar = () => {
       title: "Client Management",
       icon: Building2,
       href: "/clients"
+    },
+    {
+      title: "Product Management",
+      icon: Package,
+      href: "/products"
     },
     {
       title: "Reports",

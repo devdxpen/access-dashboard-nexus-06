@@ -25,6 +25,7 @@ import SuperAdminLogin from "./pages/SuperAdminLogin";
 import CompanyManagement from "./pages/CompanyManagement";
 import SubscriptionPlans from "./pages/SubscriptionPlans";
 import TechnicianHistory from './pages/technician/TechnicianHistory';
+import ProductManagement from './pages/ProductManagement';
 
 const queryClient = new QueryClient();
 
@@ -52,6 +53,7 @@ function App() {
             <Route path="/job/:id" element={<JobDetails />} />
             <Route path="/team" element={<TeamManagement />} />
             <Route path="/clients" element={<ClientManagement />} />
+            <Route path="/products" element={<ProductManagement />} />
             <Route path="/reports" element={<Reports />} />
             <Route path="/notifications" element={<Notifications />} />
             <Route path="/settings" element={<Settings />} />
