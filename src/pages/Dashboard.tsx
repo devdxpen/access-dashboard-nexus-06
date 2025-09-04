@@ -1,496 +1,307 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { 
-  Building2, 
+  TrendingUp, 
+  TrendingDown,
   Users, 
   Briefcase, 
-  Clock, 
-  CheckCircle2, 
-  AlertCircle, 
-  Plus,
-  TrendingUp,
-  LogOut,
+  DollarSign,
   Calendar,
-  Filter,
-  MoreVertical,
-  ArrowUp,
-  ArrowDown,
-  Activity,
+  MapPin,
+  Clock,
+  CheckCircle2,
+  AlertTriangle,
+  BarChart3,
+  PieChart,
   Target,
-  Bell,
-  X
+  Award
 } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { Badge } from '@/components/ui/badge';
-import { useNavigate } from 'react-router-dom';
-import { toast } from '@/hooks/use-toast';
+import { Progress } from '@/components/ui/progress';
 import AdminSidebar from '@/components/AdminSidebar';
 
 const Dashboard = () => {
-  const navigate = useNavigate();
-  const [isNotificationOpen, setIsNotificationOpen] = useState(false);
-
-  const handleLogout = () => {
-    toast({
-      title: "Logged out successfully",
-      description: "See you next time!",
-    });
-    navigate('/');
-  };
-
-  // Sample notifications data
-  const notifications = [
+  // Dashboard metrics data
+  const dashboardStats = [
     {
-      id: 1,
-      type: 'job_created',
-      title: 'New Job Created',
-      message: 'Technician John Smith created a new HVAC Installation job for Acme Corp',
-      time: '2 minutes ago',
-      read: false,
-      priority: 'medium'
-    },
-    {
-      id: 2,
-      type: 'job_completed',
-      title: 'Job Completed',
-      message: 'Sarah Johnson completed Plumbing Services at Tech Solutions and submitted for approval',
-      time: '15 minutes ago',
-      read: false,
-      priority: 'high'
-    },
-    {
-      id: 3,
-      type: 'task_moved',
-      title: 'Task Status Updated',
-      message: 'Electrical Repair job moved to "In Progress" by Mike Wilson',
-      time: '1 hour ago',
-      read: true,
-      priority: 'low'
-    },
-    {
-      id: 4,
-      type: 'approval_needed',
-      title: 'Approval Required',
-      message: 'Network Setup job at Startup Inc requires your approval with uploaded completion photos',
-      time: '2 hours ago',
-      read: false,
-      priority: 'high'
-    },
-    {
-      id: 5,
-      type: 'technician_assigned',
-      title: 'Technician Assigned',
-      message: 'Alex Brown has been assigned to Security System installation at Metro Bank',
-      time: '3 hours ago',
-      read: true,
-      priority: 'medium'
-    }
-  ];
-
-  const unreadCount = notifications.filter(n => !n.read).length;
-
-  const getNotificationIcon = (type: string) => {
-    switch (type) {
-      case 'job_created':
-        return <Plus className="h-4 w-4 text-blue-500" />;
-      case 'job_completed':
-        return <CheckCircle2 className="h-4 w-4 text-green-500" />;
-      case 'task_moved':
-        return <Activity className="h-4 w-4 text-purple-500" />;
-      case 'approval_needed':
-        return <AlertCircle className="h-4 w-4 text-red-500" />;
-      case 'technician_assigned':
-        return <Users className="h-4 w-4 text-orange-500" />;
-      default:
-        return <Bell className="h-4 w-4 text-gray-500" />;
-    }
-  };
-
-  const getPriorityBadge = (priority: string) => {
-    const priorityConfig = {
-      'high': { className: 'bg-red-100 text-red-800 border-red-200' },
-      'medium': { className: 'bg-yellow-100 text-yellow-800 border-yellow-200' },
-      'low': { className: 'bg-green-100 text-green-800 border-green-200' }
-    };
-    
-    const config = priorityConfig[priority] || { className: 'bg-gray-100 text-gray-800 border-gray-200' };
-    return <Badge variant="outline" className={config.className}>{priority}</Badge>;
-  };
-
-  const overviewData = [
-    {
-      title: "Total Jobs",
-      value: "7,265",
-      change: "+11.01%",
-      icon: Briefcase,
-      color: "text-blue-600",
-      bgColor: "bg-blue-50",
+      title: "Total Revenue",
+      value: "$45,231.89",
+      change: "+20.1%",
       trend: "up",
-      subtitle: "This month"
+      icon: DollarSign,
+      description: "From last month"
     },
     {
       title: "Active Jobs",
-      value: "3,671", 
-      change: "-0.03%",
-      icon: Activity,
-      color: "text-purple-600",
-      bgColor: "bg-purple-50",
-      trend: "down",
-      subtitle: "In progress"
+      value: "2,350",
+      change: "+180.1%",
+      trend: "up", 
+      icon: Briefcase,
+      description: "Currently in progress"
     },
     {
-      title: "New Clients",
-      value: "156",
-      change: "+15.03%",
-      icon: Users,
-      color: "text-green-600",
-      bgColor: "bg-green-50",
+      title: "Total Customers",
+      value: "12,234",
+      change: "+19%",
       trend: "up",
-      subtitle: "This week"
+      icon: Users,
+      description: "Active customers"
     },
     {
       title: "Completion Rate",
-      value: "93.8%",
-      change: "+6.08%",
-      icon: Target,
-      color: "text-orange-600",
-      bgColor: "bg-orange-50",
+      value: "94.8%",
+      change: "+4.3%",
       trend: "up",
-      subtitle: "Overall"
+      icon: Target,
+      description: "This month"
     }
   ];
 
-  const recentJobs = [
+  const recentActivity = [
     {
-      id: "JOB-001",
-      title: "HVAC Installation",
-      client: "Acme Corp",
-      technician: "John Smith",
-      status: "in_progress",
-      timeSpent: "3hr 20min",
-      priority: "high"
+      title: "New job created",
+      description: "HVAC Installation at ABC Corp",
+      time: "2 minutes ago",
+      status: "new"
     },
     {
-      id: "JOB-002", 
-      title: "Electrical Repair",
-      client: "Tech Solutions",
-      technician: "Sarah Johnson",
-      status: "complete",
-      timeSpent: "12hr 21min",
-      priority: "medium"
+      title: "Job completed",
+      description: "Electrical Repair by John Smith",
+      time: "15 minutes ago", 
+      status: "completed"
     },
     {
-      id: "JOB-003",
-      title: "Plumbing Service",
-      client: "Global Industries", 
-      technician: "Mike Wilson",
-      status: "pending",
-      timeSpent: "78hr 5min",
-      priority: "low"
+      title: "Payment received",
+      description: "$2,400 from TechCorp Ltd",
+      time: "1 hour ago",
+      status: "payment"
     },
     {
-      id: "JOB-004",
-      title: "Network Setup",
-      client: "Startup Inc",
-      technician: "Emily Davis",
-      status: "approved",
-      timeSpent: "26hr 58min",
-      priority: "high"
-    },
-    {
-      id: "JOB-005",
-      title: "Security System",
-      client: "Metro Bank",
-      technician: "Alex Brown",
-      status: "rejected",
-      timeSpent: "17hr 22min",
-      priority: "medium"
+      title: "New technician assigned",
+      description: "Sarah Johnson to Plumbing Service",
+      time: "2 hours ago",
+      status: "assigned"
     }
   ];
 
-  const topTechnicians = [
-    { name: "John Smith", completedJobs: 45, avatar: "/placeholder.svg", efficiency: "98%" },
-    { name: "Sarah Johnson", completedJobs: 38, avatar: "/placeholder.svg", efficiency: "95%" },
-    { name: "Mike Wilson", completedJobs: 32, avatar: "/placeholder.svg", efficiency: "92%" }
+  const topPerformers = [
+    { name: "John Smith", jobs: 45, rating: 4.9, revenue: "$12,450" },
+    { name: "Sarah Johnson", jobs: 38, rating: 4.8, revenue: "$9,200" },
+    { name: "Mike Wilson", jobs: 32, rating: 4.7, revenue: "$8,100" },
+    { name: "Emily Davis", jobs: 28, rating: 4.6, revenue: "$7,300" }
   ];
 
-  const getStatusBadge = (status: string) => {
-    const statusConfig = {
-      'complete': { label: 'Complete', className: 'bg-green-100 text-green-800 hover:bg-green-100' },
-      'in_progress': { label: 'In Progress', className: 'bg-blue-100 text-blue-800 hover:bg-blue-100' },
-      'pending': { label: 'Pending', className: 'bg-yellow-100 text-yellow-800 hover:bg-yellow-100' },
-      'approved': { label: 'Approved', className: 'bg-emerald-100 text-emerald-800 hover:bg-emerald-100' },
-      'rejected': { label: 'Rejected', className: 'bg-red-100 text-red-800 hover:bg-red-100' }
-    };
-    
-    const config = statusConfig[status] || { label: status, className: 'bg-gray-100 text-gray-800' };
-    return <Badge className={config.className}>{config.label}</Badge>;
-  };
+  const monthlyProgress = [
+    { month: "Jan", jobs: 65, revenue: 8400 },
+    { month: "Feb", jobs: 78, revenue: 9200 },
+    { month: "Mar", jobs: 82, revenue: 10100 },
+    { month: "Apr", jobs: 91, revenue: 11800 },
+    { month: "May", jobs: 95, revenue: 12400 }
+  ];
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gradient-to-br from-background to-muted/20">
       <AdminSidebar />
       
       <div className="lg:ml-64">
         {/* Header */}
-        <header className="bg-white shadow-sm border-b sticky top-0 z-10">
+        <header className="bg-background/80 backdrop-blur-sm border-b border-border sticky top-0 z-10">
           <div className="flex items-center justify-between px-6 py-4">
-            <div className="flex items-center space-x-4">
-              <Building2 className="h-8 w-8 text-primary" />
-              <div>
-                <h1 className="text-xl font-semibold text-gray-900">FlashBiz Dashboard</h1>
-                <p className="text-sm text-gray-500">Welcome back, Admin</p>
-              </div>
+            <div>
+              <h1 className="text-2xl font-bold text-foreground">Dashboard</h1>
+              <p className="text-sm text-muted-foreground">Welcome back! Here's what's happening today.</p>
             </div>
-            
-            <div className="flex items-center space-x-4">
+            <div className="flex items-center space-x-3">
               <Button variant="outline" size="sm">
                 <Calendar className="h-4 w-4 mr-2" />
                 Today
               </Button>
-              <Button variant="outline" size="sm">
-                <Filter className="h-4 w-4 mr-2" />
-                Filter
-              </Button>
-              
-              {/* Notification Button */}
-              <Button 
-                variant="outline" 
-                size="sm"
-                className="relative"
-                onClick={() => setIsNotificationOpen(true)}
-              >
-                <Bell className="h-4 w-4" />
-                {unreadCount > 0 && (
-                  <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
-                    {unreadCount}
-                  </span>
-                )}
-              </Button>
-              
-              <div className="flex items-center space-x-2">
-                <Avatar className="h-8 w-8">
-                  <AvatarImage src="/placeholder.svg" />
-                  <AvatarFallback>AD</AvatarFallback>
-                </Avatar>
-                <span className="text-sm font-medium text-gray-700">Admin User</span>
-              </div>
-              <Button 
-                variant="ghost" 
-                size="sm" 
-                onClick={handleLogout}
-                className="text-gray-600 hover:text-gray-900"
-              >
-                <LogOut className="h-4 w-4" />
+              <Button>
+                <BarChart3 className="h-4 w-4 mr-2" />
+                View Reports
               </Button>
             </div>
           </div>
         </header>
 
-        {/* Notification Off-canvas */}
-        {isNotificationOpen && (
-          <div className="fixed inset-0 z-50 flex">
-            {/* Backdrop */}
-            <div 
-              className="fixed inset-0 bg-black bg-opacity-50 transition-opacity"
-              onClick={() => setIsNotificationOpen(false)}
-            />
-            
-            {/* Off-canvas panel */}
-            <div className="ml-auto relative flex w-full max-w-md flex-col bg-white shadow-xl">
-              <div className="flex items-center justify-between px-4 py-6 border-b">
-                <h2 className="text-lg font-semibold text-gray-900">Notifications</h2>
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={() => setIsNotificationOpen(false)}
-                >
-                  <X className="h-4 w-4" />
-                </Button>
-              </div>
-              
-              <div className="flex-1 overflow-y-auto">
-                <div className="space-y-1">
-                  {notifications.map((notification) => (
-                    <div
-                      key={notification.id}
-                      className={`p-4 border-b border-gray-100 hover:bg-gray-50 transition-colors ${
-                        !notification.read ? 'bg-blue-50 border-l-4 border-l-blue-500' : ''
-                      }`}
-                    >
-                      <div className="flex items-start space-x-3">
-                        <div className="flex-shrink-0 mt-1">
-                          {getNotificationIcon(notification.type)}
+        {/* Main Content */}
+        <main className="p-6 space-y-6">
+          {/* Key Metrics */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            {dashboardStats.map((stat, index) => (
+              <Card key={index} className="relative overflow-hidden">
+                <CardContent className="p-6">
+                  <div className="flex items-center justify-between">
+                    <div className="space-y-2">
+                      <p className="text-sm font-medium text-muted-foreground">
+                        {stat.title}
+                      </p>
+                      <p className="text-3xl font-bold text-foreground">
+                        {stat.value}
+                      </p>
+                      <div className="flex items-center space-x-2">
+                        <div className={`flex items-center text-sm ${
+                          stat.trend === 'up' ? 'text-emerald-600' : 'text-red-600'
+                        }`}>
+                          {stat.trend === 'up' ? (
+                            <TrendingUp className="h-4 w-4 mr-1" />
+                          ) : (
+                            <TrendingDown className="h-4 w-4 mr-1" />
+                          )}
+                          <span className="font-medium">{stat.change}</span>
                         </div>
-                        <div className="flex-1 min-w-0">
-                          <div className="flex items-center justify-between mb-1">
-                            <p className="text-sm font-medium text-gray-900 truncate">
-                              {notification.title}
-                            </p>
-                            {getPriorityBadge(notification.priority)}
-                          </div>
-                          <p className="text-sm text-gray-600 mb-2">
-                            {notification.message}
-                          </p>
-                          <div className="flex items-center justify-between">
-                            <span className="text-xs text-gray-500">
-                              {notification.time}
-                            </span>
-                            {!notification.read && (
-                              <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
-                            )}
-                          </div>
+                        <span className="text-xs text-muted-foreground">
+                          {stat.description}
+                        </span>
+                      </div>
+                    </div>
+                    <div className="h-12 w-12 rounded-full bg-primary/10 flex items-center justify-center">
+                      <stat.icon className="h-6 w-6 text-primary" />
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            {/* Recent Activity */}
+            <Card className="lg:col-span-2">
+              <CardHeader className="flex flex-row items-center justify-between">
+                <div>
+                  <CardTitle className="text-lg font-semibold">Recent Activity</CardTitle>
+                  <p className="text-sm text-muted-foreground">Latest updates and notifications</p>
+                </div>
+                <Button variant="outline" size="sm">View All</Button>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                {recentActivity.map((activity, index) => (
+                  <div key={index} className="flex items-start space-x-4 p-3 rounded-lg bg-muted/50 hover:bg-muted transition-colors">
+                    <div className={`h-2 w-2 rounded-full mt-2 ${
+                      activity.status === 'new' ? 'bg-blue-500' :
+                      activity.status === 'completed' ? 'bg-green-500' :
+                      activity.status === 'payment' ? 'bg-yellow-500' : 'bg-purple-500'
+                    }`} />
+                    <div className="flex-1 space-y-1">
+                      <p className="text-sm font-medium text-foreground">
+                        {activity.title}
+                      </p>
+                      <p className="text-sm text-muted-foreground">
+                        {activity.description}
+                      </p>
+                      <p className="text-xs text-muted-foreground">
+                        {activity.time}
+                      </p>
+                    </div>
+                  </div>
+                ))}
+              </CardContent>
+            </Card>
+
+            {/* Top Performers */}
+            <Card>
+              <CardHeader>
+                <div className="flex items-center space-x-2">
+                  <Award className="h-5 w-5 text-primary" />
+                  <CardTitle className="text-lg font-semibold">Top Performers</CardTitle>
+                </div>
+                <p className="text-sm text-muted-foreground">Best technicians this month</p>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                {topPerformers.map((performer, index) => (
+                  <div key={index} className="flex items-center justify-between p-3 rounded-lg bg-muted/30">
+                    <div className="flex items-center space-x-3">
+                      <div className="flex items-center justify-center w-8 h-8 rounded-full bg-primary text-primary-foreground text-sm font-bold">
+                        {index + 1}
+                      </div>
+                      <div>
+                        <p className="text-sm font-medium text-foreground">
+                          {performer.name}
+                        </p>
+                        <div className="flex items-center space-x-2 text-xs text-muted-foreground">
+                          <span>{performer.jobs} jobs</span>
+                          <span>•</span>
+                          <span>★ {performer.rating}</span>
                         </div>
+                      </div>
+                    </div>
+                    <div className="text-right">
+                      <p className="text-sm font-semibold text-foreground">
+                        {performer.revenue}
+                      </p>
+                      <Progress 
+                        value={(performer.jobs / 50) * 100} 
+                        className="w-16 h-2 mt-1"
+                      />
+                    </div>
+                  </div>
+                ))}
+              </CardContent>
+            </Card>
+          </div>
+
+          {/* Monthly Overview */}
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <Card>
+              <CardHeader>
+                <div className="flex items-center space-x-2">
+                  <BarChart3 className="h-5 w-5 text-primary" />
+                  <CardTitle className="text-lg font-semibold">Monthly Progress</CardTitle>
+                </div>
+                <p className="text-sm text-muted-foreground">Jobs completed over time</p>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-4">
+                  {monthlyProgress.map((month, index) => (
+                    <div key={index} className="flex items-center justify-between">
+                      <div className="flex items-center space-x-3">
+                        <span className="text-sm font-medium text-muted-foreground w-8">
+                          {month.month}
+                        </span>
+                        <div className="flex-1">
+                          <Progress value={(month.jobs / 100) * 100} className="h-2" />
+                        </div>
+                      </div>
+                      <div className="text-right text-sm">
+                        <p className="font-medium text-foreground">{month.jobs} jobs</p>
+                        <p className="text-muted-foreground">${month.revenue.toLocaleString()}</p>
                       </div>
                     </div>
                   ))}
                 </div>
-              </div>
-              
-              <div className="border-t p-4">
-                <Button className="w-full" variant="outline">
-                  View All Notifications
-                </Button>
-              </div>
-            </div>
-          </div>
-        )}
+              </CardContent>
+            </Card>
 
-        {/* Main Content */}
-        <main className="p-6">
-          <div className="space-y-6">
-            {/* Overview Cards */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-              {overviewData.map((item, index) => (
-                <Card key={index} className="card-hover animate-fade-in border-0 shadow-sm hover:shadow-md transition-all duration-300">
-                  <CardContent className="p-6">
-                    <div className="flex items-start justify-between">
-                      <div className="flex-1">
-                        <p className="text-sm font-medium text-gray-600 mb-1">{item.title}</p>
-                        <p className="text-3xl font-bold text-gray-900 mb-1">{item.value}</p>
-                        <div className="flex items-center space-x-2">
-                          <div className={`flex items-center ${item.trend === 'up' ? 'text-green-600' : 'text-red-500'}`}>
-                            {item.trend === 'up' ? <ArrowUp className="h-3 w-3" /> : <ArrowDown className="h-3 w-3" />}
-                            <span className="text-xs font-medium">{item.change}</span>
-                          </div>
-                          <span className="text-xs text-gray-500">{item.subtitle}</span>
-                        </div>
-                      </div>
-                      <div className={`${item.bgColor} p-3 rounded-2xl`}>
-                        <item.icon className={`h-6 w-6 ${item.color}`} />
-                      </div>
-                    </div>
-                  </CardContent>
-                </Card>
-              ))}
-            </div>
-
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-              {/* Recent Jobs */}
-              <Card className="lg:col-span-2 border-0 shadow-sm">
-                <CardHeader className="flex flex-row items-center justify-between pb-4">
-                  <div>
-                    <CardTitle className="text-lg font-semibold">Recent Jobs</CardTitle>
-                    <p className="text-sm text-gray-500 mt-1">Latest job activities and status</p>
-                  </div>
-                  <div className="flex space-x-2">
-                    <Button variant="outline" size="sm">
-                      View All
-                    </Button>
-                    <Button variant="ghost" size="sm">
-                      <MoreVertical className="h-4 w-4" />
-                    </Button>
-                  </div>
-                </CardHeader>
-                <CardContent>
-                  <div className="space-y-4">
-                    {recentJobs.map((job, index) => (
-                      <div key={index} className="flex items-center justify-between p-4 border border-gray-100 rounded-xl hover:bg-gray-50 transition-colors">
-                        <div className="flex items-center space-x-4">
-                          <div className="w-2 h-8 bg-primary rounded-full"></div>
-                          <div>
-                            <div className="flex items-center space-x-2 mb-1">
-                              <p className="font-medium text-gray-900">{job.title}</p>
-                              {getPriorityBadge(job.priority)}
-                            </div>
-                            <p className="text-sm text-gray-600">{job.client} • {job.technician}</p>
-                            <p className="text-xs text-gray-500">Time: {job.timeSpent}</p>
-                          </div>
-                        </div>
-                        <div className="text-right">
-                          {getStatusBadge(job.status)}
-                          <p className="text-xs text-gray-500 mt-1">{job.id}</p>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </CardContent>
-              </Card>
-
-              {/* Top Technicians */}
-              <Card className="border-0 shadow-sm">
-                <CardHeader className="pb-4">
-                  <CardTitle className="text-lg font-semibold flex items-center">
-                    <TrendingUp className="h-5 w-5 mr-2 text-primary" />
-                    Top Performers
-                  </CardTitle>
-                  <p className="text-sm text-gray-500">Best technicians this month</p>
-                </CardHeader>
-                <CardContent>
-                  <div className="space-y-4">
-                    {topTechnicians.map((tech, index) => (
-                      <div key={index} className="flex items-center justify-between p-3 bg-gray-50 rounded-xl">
-                        <div className="flex items-center space-x-3">
-                          <div className="flex items-center justify-center w-8 h-8 bg-gradient-to-r from-primary to-blue-600 rounded-full text-white font-bold text-sm">
-                            #{index + 1}
-                          </div>
-                          <Avatar className="h-10 w-10">
-                            <AvatarImage src={tech.avatar} />
-                            <AvatarFallback>{tech.name.split(' ').map(n => n[0]).join('')}</AvatarFallback>
-                          </Avatar>
-                          <div>
-                            <p className="text-sm font-medium text-gray-900">{tech.name}</p>
-                            <p className="text-xs text-gray-500">{tech.completedJobs} jobs • {tech.efficiency} efficiency</p>
-                          </div>
-                        </div>
-                        <div className="w-16 bg-gray-200 rounded-full h-2">
-                          <div 
-                            className="bg-gradient-to-r from-primary to-blue-600 h-2 rounded-full" 
-                            style={{ width: `${(tech.completedJobs / 50) * 100}%` }}
-                          ></div>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </CardContent>
-              </Card>
-            </div>
-
-            {/* Quick Actions */}
-            <Card className="border-0 shadow-sm">
+            <Card>
               <CardHeader>
-                <CardTitle className="text-lg font-semibold">Quick Actions</CardTitle>
-                <p className="text-sm text-gray-500">Common tasks and shortcuts</p>
+                <div className="flex items-center space-x-2">
+                  <PieChart className="h-5 w-5 text-primary" />
+                  <CardTitle className="text-lg font-semibold">Quick Stats</CardTitle>
+                </div>
+                <p className="text-sm text-muted-foreground">Current status overview</p>
               </CardHeader>
-              <CardContent>
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-                  <Button className="flex flex-col items-center space-y-2 h-20 bg-gradient-to-r from-primary to-blue-600 hover:from-primary/90 hover:to-blue-600/90">
-                    <Plus className="h-5 w-5" />
-                    <span>Create New Job</span>
-                  </Button>
-                  <Button variant="outline" className="flex flex-col items-center space-y-2 h-20 border-2 hover:bg-gray-50">
-                    <Users className="h-5 w-5" />
-                    <span>Add Technician</span>
-                  </Button>
-                  <Button variant="outline" className="flex flex-col items-center space-y-2 h-20 border-2 hover:bg-gray-50">
-                    <Building2 className="h-5 w-5" />
-                    <span>Add Client</span>
-                  </Button>
-                  <Button variant="outline" className="flex flex-col items-center space-y-2 h-20 border-2 hover:bg-gray-50">
-                    <TrendingUp className="h-5 w-5" />
-                    <span>View Reports</span>
-                  </Button>
+              <CardContent className="space-y-6">
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="text-center p-4 rounded-lg bg-emerald-50 dark:bg-emerald-950/20">
+                    <CheckCircle2 className="h-8 w-8 text-emerald-600 mx-auto mb-2" />
+                    <p className="text-2xl font-bold text-emerald-600">89</p>
+                    <p className="text-xs text-emerald-700 dark:text-emerald-400">Completed Today</p>
+                  </div>
+                  <div className="text-center p-4 rounded-lg bg-blue-50 dark:bg-blue-950/20">
+                    <Clock className="h-8 w-8 text-blue-600 mx-auto mb-2" />
+                    <p className="text-2xl font-bold text-blue-600">24</p>
+                    <p className="text-xs text-blue-700 dark:text-blue-400">In Progress</p>
+                  </div>
+                  <div className="text-center p-4 rounded-lg bg-yellow-50 dark:bg-yellow-950/20">
+                    <AlertTriangle className="h-8 w-8 text-yellow-600 mx-auto mb-2" />
+                    <p className="text-2xl font-bold text-yellow-600">7</p>
+                    <p className="text-xs text-yellow-700 dark:text-yellow-400">Urgent Tasks</p>
+                  </div>
+                  <div className="text-center p-4 rounded-lg bg-purple-50 dark:bg-purple-950/20">
+                    <MapPin className="h-8 w-8 text-purple-600 mx-auto mb-2" />
+                    <p className="text-2xl font-bold text-purple-600">156</p>
+                    <p className="text-xs text-purple-700 dark:text-purple-400">Locations</p>
+                  </div>
                 </div>
               </CardContent>
             </Card>
