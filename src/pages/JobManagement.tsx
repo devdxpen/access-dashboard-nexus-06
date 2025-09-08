@@ -25,11 +25,27 @@ import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import AdminSidebar from '@/components/AdminSidebar';
 import CreateJobModal from '@/components/CreateJobModal';
+import JobViewModal from '@/components/JobViewModal';
+
+interface TimelineEvent {
+  id: string;
+  timestamp: string;
+  type: 'created' | 'assigned' | 'note' | 'image' | 'status_change';
+  user: string;
+  userAvatar?: string;
+  content?: string;
+  images?: string[];
+  statusChange?: {
+    from: string;
+    to: string;
+  };
+}
 
 interface Job {
   id: string;
   clientName: string;
   property: string;
+  site: string;
   serviceType: string;
   assignedTechnician: string;
   scheduledDate: string;
@@ -38,6 +54,7 @@ interface Job {
   description: string;
   location: string;
   priority: 'high' | 'medium' | 'low';
+  timeline: TimelineEvent[];
 }
 
 const JobManagement = () => {
@@ -48,6 +65,7 @@ const JobManagement = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
   const [editingJob, setEditingJob] = useState<Job | null>(null);
+  const [viewingJob, setViewingJob] = useState<Job | null>(null);
 
   // Mock data - in real app this would come from API
   const jobs: Job[] = [
@@ -55,6 +73,7 @@ const JobManagement = () => {
       id: 'JOB-001',
       clientName: 'Acme Corp',
       property: 'Main Office Building',
+      site: 'Building A - Floor 3',
       serviceType: 'Installation',
       assignedTechnician: 'John Smith',
       scheduledDate: '2024-01-15',
@@ -62,12 +81,27 @@ const JobManagement = () => {
       status: 'pending',
       description: 'Install new HVAC system',
       location: '123 Business St, City',
-      priority: 'high'
+      priority: 'high',
+      timeline: [
+        {
+          id: 'timeline-1',
+          timestamp: '2024-01-15T12:20:00Z',
+          type: 'created',
+          user: 'Admin User'
+        },
+        {
+          id: 'timeline-2',
+          timestamp: '2024-01-15T12:30:00Z',
+          type: 'assigned',
+          user: 'John Smith'
+        }
+      ]
     },
     {
       id: 'JOB-002',
       clientName: 'Tech Solutions',
       property: 'Data Center',
+      site: 'Server Room 2',
       serviceType: 'Maintenance',
       assignedTechnician: 'Sarah Johnson',
       scheduledDate: '2024-01-16',
@@ -75,12 +109,61 @@ const JobManagement = () => {
       status: 'ongoing',
       description: 'Routine server maintenance',
       location: '456 Tech Ave, City',
-      priority: 'medium'
+      priority: 'medium',
+      timeline: [
+        {
+          id: 'timeline-3',
+          timestamp: '2024-01-16T12:20:00Z',
+          type: 'created',
+          user: 'Admin User'
+        },
+        {
+          id: 'timeline-4',
+          timestamp: '2024-01-16T12:30:00Z',
+          type: 'assigned',
+          user: 'John Smith'
+        },
+        {
+          id: 'timeline-5',
+          timestamp: '2024-01-16T12:30:00Z',
+          type: 'assigned',
+          user: 'Sarah Johnson'
+        },
+        {
+          id: 'timeline-6',
+          timestamp: '2024-01-16T18:00:00Z',
+          type: 'note',
+          user: 'John Smith',
+          content: 'Working nicely done I have custom use camera'
+        },
+        {
+          id: 'timeline-7',
+          timestamp: '2024-01-16T18:00:00Z',
+          type: 'image',
+          user: 'Sarah Johnson',
+          images: ['image1.jpg', 'image2.jpg', 'image3.jpg', 'image4.jpg']
+        },
+        {
+          id: 'timeline-8',
+          timestamp: '2024-01-16T19:00:00Z',
+          type: 'note',
+          user: 'Sarah Johnson',
+          content: 'Working nicely done I have custom use camera'
+        },
+        {
+          id: 'timeline-9',
+          timestamp: '2024-01-16T19:00:00Z',
+          type: 'image',
+          user: 'John Smith',
+          images: ['image5.jpg', 'image6.jpg', 'image7.jpg', 'image8.jpg']
+        }
+      ]
     },
     {
       id: 'JOB-003',
       clientName: 'Global Industries',
       property: 'Warehouse A',
+      site: 'Loading Dock',
       serviceType: 'Repair',
       assignedTechnician: 'Mike Wilson',
       scheduledDate: '2024-01-14',
@@ -88,12 +171,37 @@ const JobManagement = () => {
       status: 'completed',
       description: 'Fix electrical wiring issues',
       location: '789 Industrial Blvd, City',
-      priority: 'high'
+      priority: 'high',
+      timeline: [
+        {
+          id: 'timeline-10',
+          timestamp: '2024-01-14T12:20:00Z',
+          type: 'created',
+          user: 'Admin User'
+        },
+        {
+          id: 'timeline-11',
+          timestamp: '2024-01-14T12:30:00Z',
+          type: 'assigned',
+          user: 'Mike Wilson'
+        },
+        {
+          id: 'timeline-12',
+          timestamp: '2024-01-14T16:00:00Z',
+          type: 'status_change',
+          user: 'Mike Wilson',
+          statusChange: {
+            from: 'pending',
+            to: 'completed'
+          }
+        }
+      ]
     },
     {
       id: 'JOB-004',
       clientName: 'Startup Inc',
       property: 'Office Floor 3',
+      site: 'Conference Room A',
       serviceType: 'Installation',
       assignedTechnician: 'Emily Davis',
       scheduledDate: '2024-01-17',
@@ -101,7 +209,21 @@ const JobManagement = () => {
       status: 'pending',
       description: 'Install security cameras',
       location: '321 Innovation St, City',
-      priority: 'low'
+      priority: 'low',
+      timeline: [
+        {
+          id: 'timeline-13',
+          timestamp: '2024-01-17T12:20:00Z',
+          type: 'created',
+          user: 'Admin User'
+        },
+        {
+          id: 'timeline-14',
+          timestamp: '2024-01-17T12:30:00Z',
+          type: 'assigned',
+          user: 'Emily Davis'
+        }
+      ]
     }
   ];
 
@@ -292,7 +414,7 @@ const JobManagement = () => {
                         <TableCell>{getPriorityBadge(job.priority)}</TableCell>
                         <TableCell>
                           <div className="flex items-center gap-1">
-                            <Button variant="ghost" size="sm">
+                            <Button variant="ghost" size="sm" onClick={() => setViewingJob(job)}>
                               <Eye className="h-4 w-4" />
                             </Button>
                             <Button variant="ghost" size="sm" onClick={() => setEditingJob(job)}>
@@ -372,6 +494,13 @@ const JobManagement = () => {
           job={editingJob}
         />
       )}
+
+      {/* Job View Modal */}
+      <JobViewModal 
+        isOpen={!!viewingJob} 
+        onClose={() => setViewingJob(null)}
+        job={viewingJob}
+      />
     </div>
   );
 };
